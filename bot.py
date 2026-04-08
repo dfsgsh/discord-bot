@@ -13,7 +13,15 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 class VerifyView(discord.ui.View):
-    @discord.ui.button(label="VERIFY", style=discord.ButtonStyle.green, emoji="✅")
+    def __init__(self):
+        super().__init__(timeout=None)   # ทำให้ปุ่มไม่หมดเวลา
+
+    @discord.ui.button(
+        label="VERIFY",
+        style=discord.ButtonStyle.green,
+        emoji="✅",
+        custom_id="verify_button"
+    )
     async def verify_button(self, interaction: discord.Interaction, button: discord.ui.Button):
 
         role = interaction.guild.get_role(VERIFY_ROLE_ID)
@@ -23,24 +31,15 @@ class VerifyView(discord.ui.View):
             return
 
         await interaction.user.add_roles(role)
-
-        await interaction.response.send_message(
-            "ยืนยันตัวตนสำเร็จ 🎉",
-            ephemeral=True
-        )
+        await interaction.response.send_message("ยืนยันตัวตนสำเร็จ 🎉", ephemeral=True)
 
 
 @bot.command()
 async def verify(ctx):
-
     embed = discord.Embed(
         title="🔐 Verification",
         description="กดปุ่มด้านล่างเพื่อยืนยันตัวตน",
         color=0x2b2d31
-    )
-
-    embed.set_image(
-        url="https://i.pinimg.com/1200x/77/f7/38/77f738bf86188c93746c3a91c80ee32b.jpg"
     )
 
     await ctx.send(embed=embed, view=VerifyView())
@@ -48,6 +47,7 @@ async def verify(ctx):
 
 @bot.event
 async def on_ready():
+    bot.add_view(VerifyView())  # ลงทะเบียนปุ่มทุกครั้งที่บอทเปิด
     print(f"Logged in as {bot.user}")
 
 
