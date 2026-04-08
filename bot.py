@@ -42,6 +42,10 @@ async def verify(ctx):
         color=0x2b2d31
     )
 
+    embed.set_image(
+    url="https://i.pinimg.com/1200x/77/f7/38/77f738bf86188c93746c3a91c80ee32b.jpg"
+    )
+
     await ctx.send(embed=embed, view=VerifyView())
 
 
